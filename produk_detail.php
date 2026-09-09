@@ -20,7 +20,7 @@ if (!$p) {
     $page_title = 'Produk tidak ditemukan';
     require_once __DIR__ . '/includes/header.php';
     echo '<div class="alert alert-danger">Produk tidak ditemukan atau sudah tidak tersedia.</div>';
-    echo '<a href="' . BASE_URL . '/katalog.php" class="btn btn-success">Kembali ke katalog</a>';
+    echo '<a href="' . BASE_URL . '/index.php" class="btn btn-success">Kembali ke katalog</a>';
     require_once __DIR__ . '/includes/footer.php';
     exit;
 }

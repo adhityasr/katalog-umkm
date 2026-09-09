@@ -26,7 +26,7 @@ $role_label = [
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark kaligawe-navbar fixed-top shadow-sm" data-bs-theme="dark">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL ?>/katalog.php">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL ?>/index.php">
             <span class="navbar-brand-logo">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DDA15E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M12 22a8 8 0 0 1-8-8c0-4.4 8-12 8-12s8 7.6 8 12a8 8 0 0 1-8 8Z"/><path d="M12 12c-4 0-6 2-6 5"/><path d="M12 12c4 0 6 2 6 5"/></svg>
             </span>
@@ -43,7 +43,7 @@ $role_label = [
         </button>
         <div class="collapse navbar-collapse" id="navMain">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link nav-link-pill" href="<?= BASE_URL ?>/katalog.php">Katalog Produk</a></li>
+                <li class="nav-item"><a class="nav-link nav-link-pill" href="<?= BASE_URL ?>/index.php#katalog">Katalog Produk</a></li>
                 <?php if ($user && $user['role'] === 'admin'): ?>
                     <li class="nav-item"><a class="nav-link nav-link-pill" href="<?= BASE_URL ?>/admin/index.php">Dashboard Admin</a></li>
                 <?php elseif ($user && $user['role'] === 'pelaku_usaha'): ?>

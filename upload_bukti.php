@@ -8,7 +8,7 @@ $pesanan_id = (int) ($_GET['pesanan_id'] ?? $_POST['pesanan_id'] ?? 0);
 // Admin/pelaku_usaha tidak boleh mengunggah bukti
 if (is_logged_in() && current_user()['role'] !== 'pembeli') {
     $_SESSION['flash'] = ['type' => 'info', 'message' => 'Hanya pembeli yang dapat mengunggah bukti pembayaran.'];
-    redirect('/katalog.php');
+    redirect('/index.php');
 }
 
 $stmt = $pdo->prepare("SELECT * FROM pesanan WHERE id = ?");
@@ -16,7 +16,7 @@ $stmt->execute([$pesanan_id]);
 $pesanan = $stmt->fetch();
 
 if (!$pesanan) {
-    redirect('/katalog.php');
+    redirect('/index.php');
 }
 
 // Validasi kepemilikan pesanan
@@ -24,19 +24,19 @@ $user = current_user();
 $is_guest = !is_logged_in();
 if ($user && $user['role'] === 'pembeli') {
     if ((int) $pesanan['user_id'] !== (int) $user['id']) {
-        redirect('/katalog.php');
+        redirect('/index.php');
     }
 } elseif ($is_guest) {
     // Tamu hanya boleh akses pesanan tanpa user_id
     if ($pesanan['user_id'] !== null) {
-        redirect('/katalog.php');
+        redirect('/index.php');
     }
     // Jika ada daftar guest_orders di session, pastikan pesanan ini termasuk (jika ada)
     if (!empty($_SESSION['guest_orders']) && !in_array($pesanan_id, $_SESSION['guest_orders'])) {
         // tetap izinkan jika pesanan memang tamu — jangan terlalu ketat
     }
 } else {
-    redirect('/katalog.php');
+    redirect('/index.php');
 }
 
 // Ambil detail per penjual untuk WA dinamis (jumlah & harga sesuai pesanan)
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$pesanan_id, $filename]);
 
             $_SESSION['flash'] = ['type' => 'success', 'message' => 'Bukti pembayaran berhasil diunggah. Menunggu konfirmasi admin.'];
-            redirect('/katalog.php');
+            redirect('/index.php');
         }
     } catch (Exception $e) {
         $errors[] = $e->getMessage();
@@ -157,7 +157,7 @@ require_once __DIR__ . '/includes/header.php';
                         </div>
                     </div>
                     <button type="submit" class="btn btn-save w-100"><i class="bi bi-send me-1"></i> Kirim Bukti Pembayaran</button>
-                    <a href="<?= BASE_URL ?>/katalog.php" class="btn btn-outline-secondary w-100 mt-2" style="border-radius:12px">Nanti saja</a>
+                    <a href="<?= BASE_URL ?>/index.php" class="btn btn-outline-secondary w-100 mt-2" style="border-radius:12px">Nanti saja</a>
                 </form>
                 <div class="trust-badges mt-3 justify-content-center">
                     <span class="trust-badge"><i class="bi bi-shield-check text-success"></i> Aman</span>

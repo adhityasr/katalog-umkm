@@ -4,7 +4,7 @@ require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/auth.php';
 
 if (is_logged_in()) {
-    redirect('/katalog.php');
+    redirect('/index.php');
 }
 
 $errors = [];
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($u['role'] === 'pelaku_usaha') {
                 redirect('/pelaku_usaha/produk_saya.php');
             } else {
-                redirect('/katalog.php');
+                redirect('/index.php');
             }
         }
     }
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="sidebar-pattern"></div>
                     
                     <div class="brand-wrapper">
-                        <a class="text-decoration-none d-flex align-items-center gap-2 fw-bold text-white fs-4" href="<?= BASE_URL ?>/katalog.php" style="font-family: var(--font-display);">
+                        <a class="text-decoration-none d-flex align-items-center gap-2 fw-bold text-white fs-4" href="<?= BASE_URL ?>/index.php" style="font-family: var(--font-display);">
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#DDA15E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M12 22a8 8 0 0 1-8-8c0-4.4 8-12 8-12s8 7.6 8 12a8 8 0 0 1-8 8Z"/><path d="M12 12c-4 0-6 2-6 5"/><path d="M12 12c4 0 6 2 6 5"/></svg>
                             Pasar Kaligawe
                         </a>
@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="w-100">
                         <!-- Brand logo visible only on mobile -->
                         <div class="d-lg-none text-center mb-4">
-                            <a class="text-decoration-none d-inline-flex align-items-center gap-2 fw-bold text-success fs-4" href="<?= BASE_URL ?>/katalog.php" style="font-family: var(--font-display);">
+                            <a class="text-decoration-none d-inline-flex align-items-center gap-2 fw-bold text-success fs-4" href="<?= BASE_URL ?>/index.php" style="font-family: var(--font-display);">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#DDA15E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M12 22a8 8 0 0 1-8-8c0-4.4 8-12 8-12s8 7.6 8 12a8 8 0 0 1-8 8Z"/><path d="M12 12c-4 0-6 2-6 5"/><path d="M12 12c4 0 6 2 6 5"/></svg>
                                 Pasar Kaligawe
                             </a>
