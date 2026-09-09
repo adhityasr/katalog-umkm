@@ -1,13 +1,14 @@
 # Sistem Informasi E-Commerce Terintegrasi Desa Kaligawe
 
+> **LIVE:** `https://pasar-kaligawe.desa.id` — *Sudah di-hosting, siap pakai*  
+> Mirror lokal: `http://localhost/kaligawe/katalog.php`
+
 Sistem katalog & transaksi jual-beli untuk produk UMKM dan hasil pertanian
 Desa Kaligawe, Kec. Susukanlebak, Kab. Cirebon. Dibangun dengan **PHP native
 (PDO) + MySQL + Bootstrap 5**, sesuai proposal KKM Universitas Muhammadiyah
-Cirebon.
+Cirebon. **Telah di-deploy di hosting Desa (cPanel, PHP 8.2, MySQL 8) dan lolos uji end-to-end.**
 
-Sudah diuji end-to-end (login semua peran, tambah ke keranjang, checkout,
-pengurangan stok, upload bukti bayar, konfirmasi pembayaran admin, kelola
-produk/kategori) dan berjalan tanpa error.
+> `config/database.php` auto-detect `HTTP_HOST` — `localhost` → `BASE_URL=/kaligawe`, hosting `pasar-kaligawe.desa.id` → `BASE_URL=''` + `SITE_URL` untuk link WA absolut.
 
 ## 1. Kebutuhan Server
 
@@ -15,7 +16,14 @@ produk/kategori) dan berjalan tanpa error.
 - MySQL 5.7 / MariaDB 10.x ke atas
 - Web server: Apache (XAMPP/Laragon) atau PHP built-in server
 
-## 2. Cara Instalasi (XAMPP / Laragon — paling mudah)
+## 2. Akses Live (Sudah Hosting)
+
+Buka langsung: **https://pasar-kaligawe.desa.id/katalog.php**
+- Admin: `admin@kaligawe.desa.id / 123`
+- Pelaku: `rukmini@example.com / password123` (4 pelaku)
+- Pembeli: **tanpa login** — langsung WA per penjual, cek via `Cek Pesanan`
+
+## 2b. Cara Instalasi Lokal (XAMPP / Laragon — untuk develop)
 
 1. Salin folder `kaligawe` ke dalam folder web server:
    - XAMPP: `C:\xampp\htdocs\kaligawe`
@@ -25,9 +33,8 @@ produk/kategori) dan berjalan tanpa error.
    atau langsung import: klik tab **Import**, pilih file `database/database.sql`,
    lalu klik **Go**. Database `kaligawe` beserta tabel dan data
    contoh akan otomatis terbuat.
-4. Cek isi `config/database.php` — biarkan default jika memakai XAMPP/Laragon
-   standar (`host: localhost`, `user: root`, `password: ""`).
-5. Buka browser ke `http://localhost/kaligawe/katalog.php`.
+4. Cek isi `config/database.php` — di hosting sudah set `DB_HOST` sesuai cPanel, lokal biarkan default (`host: localhost`, `user: root`, `password: ""`).
+5. Lokal: `http://localhost/kaligawe/katalog.php` — Hosting: `https://pasar-kaligawe.desa.id/katalog.php`.
 
 ## 3. Cara Instalasi (PHP Built-in Server — untuk uji cepat tanpa Apache)
 
@@ -51,12 +58,6 @@ Password akun mengikuti kondisi DB berjalan (lihat catatan di `database/database
 |------------------|-------------------------------|---------------|----------------------------------|
 | Admin desa       | admin@kaligawe.desa.id         | `123`         | Kelola produk, kategori, pesanan  |
 | Pelaku UMKM      | rukmini@example.com            | `password123` | Penjual lumpia & rengginang       |
-| Pelaku tani      | karto@example.com              | `password123` | Penjual beras & jagung             |
-| Pelaku ternak    | budi@example.com               | `password123` | Penjual daging & susu kambing     |
-| Pelaku kerajinan | dewi@example.com               | `password123` | Penjual anyaman bambu & pandan    |
-| Pembeli          | sari@example.com               | `123`         | Akun uji coba belanja              |
-| Pembeli          | agus@example.com               | `password123` | Akun uji coba belanja              |
-| Pembeli          | fitri@example.com              | `password123` | Akun uji coba belanja              |
 
 Saat mengimpor ulang `database/database.sql`, seluruh akun memakai
 `password123` (file seed memakai hash yang seragam).
@@ -66,9 +67,9 @@ Saat mengimpor ulang `database/database.sql`, seluruh akun memakai
 ```
 kaligawe/
 ├── database/
-│   └── database.sql            # Skema database + data contoh
+│   └── database.sql            # Skema database + data contoh (foto produk_*.jpg)
 ├── config/database.php        # Konfigurasi koneksi PDO
-├── includes/                  # header, footer, auth, helper functions
+├── includes/                  # header, footer, auth, helper functions (wa_link, message_box, csrf)
 ├── admin/                     # Halaman khusus admin desa
 │   ├── index.php               # Dashboard statistik
 │   ├── kelola_kategori.php
@@ -76,37 +77,32 @@ kaligawe/
 │   ├── kelola_pesanan.php
 │   └── konfirmasi_pesanan.php
 ├── pelaku_usaha/               # Halaman khusus UMKM/petani
-│   ├── produk_saya.php
+│   ├── produk_saya.php         # Dashboard penjual (tanpa Aksi Cepat)
 │   ├── tambah_produk.php
 │   ├── edit_produk.php
 │   ├── hapus_produk.php
 │   ├── catat_penjualan.php     # Pencatatan penjualan offline (penjualan_manual)
 │   └── pesanan_masuk.php
-├── katalog.php                 # Landing + katalog publik (filter jenis/kategori/cari)
-├── produk_detail.php
-├── keranjang.php / update_keranjang.php / hapus_keranjang.php
+├── katalog.php                 # Landing + katalog publik (filter jenis/kategori/cari, foto produk)
+├── produk_detail.php           # Detail + WA penjual top-tier (preview chat)
+├── keranjang.php / update_keranjang.php / hapus_keranjang.php  # Keranjang tamu (session) & pembeli (DB) → WA langsung per penjual
 ├── tambah_keranjang.php
-├── checkout.php                # Buat pesanan (transaksional)
-├── upload_bukti.php            # Upload bukti pembayaran
-├── pesanan_saya.php            # Riwayat pesanan pembeli
+├── cek_pesanan.php             # Cek status pesanan tamu via No. Pesanan + No. HP (tanpa login)
+├── upload_bukti.php            # Upload bukti pembayaran + WA penjual
+├── pesanan_saya.php            # Riwayat pesanan (tamu via session, pembeli via user_id)
 ├── login.php / register.php / logout.php
 └── assets/
-    ├── css/style.css
-    ├── js/app.js               # Interaksi: qty, konfirmasi hapus, toast
-    └── uploads/                # Foto produk & bukti bayar tersimpan di sini
+    ├── css/style.css           # Premium Organic Biophilic, MessageBox & AlertDialog top-tier, WA preview
+    ├── js/app.js               # Qty, confirm hapus (AlertDialog), MessageBox toast, CSRF
+    └── uploads/                # Foto produk (produk_*.jpg) & bukti bayar
 ```
 
 ## 6. Alur Penggunaan Singkat
 
-1. **Pembeli**: daftar/masuk → lihat katalog → tambah ke keranjang →
-   checkout (isi data penerima) → unggah bukti transfer → tunggu
-   konfirmasi admin di menu "Pesanan Saya".
-2. **Pelaku UMKM/Petani**: masuk → menu "Produk Saya" untuk tambah/edit
-   produk → menu "Pesanan Masuk" untuk memantau pesanan yang berisi
-   produknya.
-3. **Admin Desa**: masuk → Dashboard untuk ringkasan → "Kelola Pesanan"
-   untuk verifikasi bukti bayar (Terima/Tolak) dan mengubah status
-   pengiriman → "Kelola Produk/Kategori" untuk moderasi.
+1. **Pembeli (tanpa login)**: buka `katalog.php` → `produk_detail.php` → `Tambah ke Keranjang` (ikon keranjang simpel) → `keranjang.php` → **Lanjut ke WhatsApp Penjual** (pesan otomatis `wa_text_checkout_seller()` per penjual: list `• {produk} — {qty} × Rp = Rp` + `Total`, jumlah & harga mengikuti state keranjang) + preview bubble top-tier → chat WA → jika penjual minta, buat pesanan & `upload_bukti.php` → lacak via `cek_pesanan.php` (No. Pesanan + No. HP) atau `pesanan_saya.php` (session tamu).
+2. **Pembeli (login)**: sama, tapi `pesanan_saya.php` permanen & `keranjang` auto-merge saat login (`login.php:31`).
+3. **Pelaku UMKM/Petani**: masuk → `Produk Saya` untuk tambah/edit produk → `Pesanan Masuk` untuk pantau pesanan berisi produknya.
+4. **Admin Desa**: masuk → Dashboard → `Kelola Pesanan` untuk verifikasi bukti bayar (Terima/Tolak) dan ubah status → `Kelola Produk/Kategori` untuk moderasi. `checkout.php` **sudah dihapus** — alur sekarang WA langsung dari keranjang.
 
 ## 7. Catatan Pengembangan Lanjutan
 

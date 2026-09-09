@@ -122,8 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     <div class="my-auto py-4">
                         <span class="badge mb-3 px-3 py-2 rounded-pill fw-semibold" style="font-size: 0.75rem; letter-spacing: 0.05em; background-color: var(--kaligawe-accent) !important; color: #3d2b00 !important;">PORTAL MASUK</span>
-                        <h2 class="display-6 fw-bold mb-3" style="font-family: var(--font-display); line-height: 1.25;">Mari dukung UMKM & Petani Lokal!</h2>
-                        <p class="text-white-50 small" style="font-family: var(--font-body); font-weight: 300;">Masuk untuk menjelajahi hasil bumi segar, aneka kerajinan tangan, dan produk olahan unggulan masyarakat Desa Kaligawe.</p>
+                        <h2 class="display-6 fw-bold mb-3" style="font-family: var(--font-display); line-height: 1.25;">Selamat Datang di Pasar Kaligawe</h2>
                     </div>
                     
                     <div class="footer-wrapper text-white-50 small mt-auto">
@@ -161,7 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label class="form-label">Kata sandi</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                    <input type="password" name="password" class="form-control" required placeholder="Masukkan kata sandi">
+                                    <input type="password" name="password" id="login_password" class="form-control" required placeholder="Masukkan kata sandi">
+                                    <button type="button" class="btn btn-outline-secondary toggle-password" data-target="login_password" aria-label="Tampilkan kata sandi"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-success w-100 btn-submit btn-loading-on-submit mt-2" data-loading-text="Masuk...">Masuk</button>
@@ -177,6 +177,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('.toggle-password').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            var input = document.getElementById(btn.dataset.target);
+            if(!input) return;
+            var isPass = input.type === 'password';
+            input.type = isPass ? 'text' : 'password';
+            btn.innerHTML = isPass ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+        });
+    });
+});
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/app.js"></script>
 </body>

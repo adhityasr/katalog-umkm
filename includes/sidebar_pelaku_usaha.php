@@ -32,8 +32,13 @@ $user = current_user();
         </a>
         <a href="<?= BASE_URL ?>/pelaku_usaha/pesanan_masuk.php"
            class="sidebar-link <?= $current_page === 'pesanan_masuk.php' ? 'active' : '' ?>">
-           <i class="bi bi-inbox"></i>
-           <span>Pesanan Masuk</span>
+            <i class="bi bi-inbox"></i>
+            <span>Pesanan Masuk</span>
+        </a>
+        <a href="<?= BASE_URL ?>/pelaku_usaha/edit_profil.php"
+           class="sidebar-link <?= $current_page === 'edit_profil.php' ? 'active' : '' ?>">
+            <i class="bi bi-person-gear"></i>
+            <span>Edit Profil</span>
         </a>
     </nav>
 

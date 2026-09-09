@@ -11,12 +11,6 @@
                     Platform jual-beli produk UMKM, kelompok tani, dan BUMDes Desa Kaligawe,
                     Kec. Susukanlebak, Kab. Cirebon. Belanja langsung dari warga desa.
                 </p>
-                <div class="footer-social d-flex gap-2">
-                    <a href="#" class="footer-social-link" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="footer-social-link" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="footer-social-link" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
-                    <a href="#" class="footer-social-link" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
-                </div>
             </div>
             <div class="col-6 col-lg-2">
                 <h6 class="footer-title">Navigasi</h6>
@@ -24,14 +18,6 @@
                     <li><a href="<?= BASE_URL ?>/katalog.php">Beranda</a></li>
                     <li><a href="<?= BASE_URL ?>/katalog.php#tentang">Tentang</a></li>
                     <li><a href="<?= BASE_URL ?>/katalog.php#katalog">Katalog</a></li>
-                </ul>
-            </div>
-            <div class="col-6 col-lg-2">
-                <h6 class="footer-title">Akun</h6>
-                <ul class="footer-links list-unstyled">
-                    <li><a href="<?= BASE_URL ?>/login.php">Masuk</a></li>
-                    <li><a href="<?= BASE_URL ?>/register.php">Daftar</a></li>
-                    <li><a href="<?= BASE_URL ?>/pesanan_saya.php">Pesanan Saya</a></li>
                 </ul>
             </div>
             <div class="col-lg-3 col-md-6">
@@ -62,19 +48,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Konfirmasi Hapus</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-content alert-dialog">
+            <button type="button" class="alert-dialog-close" data-bs-dismiss="modal" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
+            <div class="alert-dialog-icon alert-dialog-icon--danger">
+                <i class="bi bi-trash3"></i>
             </div>
-            <div class="modal-body" id="confirmDeleteMessage">
-                Apakah Anda yakin ingin menghapus data ini?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-secondary btn" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn-danger btn" id="confirmDeleteBtn">Ya, Hapus</button>
+            <h5 class="alert-dialog-title">Hapus produk?</h5>
+            <p class="alert-dialog-text" id="confirmDeleteMessage">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
+            <div class="alert-dialog-actions">
+                <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn"><i class="bi bi-trash3 me-1"></i> Ya, Hapus</button>
             </div>
         </div>
     </div>

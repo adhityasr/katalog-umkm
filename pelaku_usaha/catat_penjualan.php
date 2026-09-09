@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Pilih produk terlebih dahulu.';
     }
     if ($qty < 1) {
-        $errors[] = 'Jumlah (Qty) tidak valid.';
+        $errors[] = 'Jumlah tidak valid.';
     }
     if (empty($tanggal) || !strtotime($tanggal)) {
         $errors[] = 'Tanggal tidak valid.';
@@ -120,7 +120,7 @@ require_once __DIR__ . '/../includes/header.php';
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">Jumlah Terjual (Qty)</label>
+                                <label class="form-label">Jumlah Terjual</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-plus-slash-minus"></i></span>
                                     <input type="number" name="qty" class="form-control" min="1" value="1" required>

@@ -136,10 +136,37 @@ require_once __DIR__ . '/../includes/header.php';
                                 <label class="form-label">Stok</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-boxes"></i></span>
-                                    <input type="number" name="stok" min="0" class="form-control" placeholder="0" value="<?= sanitize($old['stok']) ?>" required>
+                                    <input type="number" name="stok" id="stokInput" min="0" class="form-control" placeholder="0" value="<?= sanitize($old['stok']) ?>" required>
                                 </div>
                             </div>
                         </div>
+                        <div id="stokWarning" style="display: none; margin-top: 0.85rem;">
+                            <div class="message-box message-box--warning" role="alert">
+                                <div class="message-box-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                                <div class="message-box-content">
+                                    <div class="message-box-title">Stok Menipis</div>
+                                    <div class="message-box-text">Stok di bawah 5 — produk akan tampil badge <strong>“Stok menipis”</strong> dan <span style="color:#EF4444">stock-bar merah</span> di katalog. Segera isi ulang.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                        (function(){
+                            var input = document.getElementById('stokInput');
+                            var warn = document.getElementById('stokWarning');
+                            if(!input || !warn) return;
+                            function check(){
+                                var v = parseInt(input.value, 10);
+                                if(!isNaN(v) && v >= 0 && v < 5){
+                                    warn.style.display = 'block';
+                                } else {
+                                    warn.style.display = 'none';
+                                }
+                            }
+                            input.addEventListener('input', check);
+                            input.addEventListener('change', check);
+                            check();
+                        })();
+                        </script>
 
                         <div class="form-section">
                             <span class="fs-icon"><i class="bi bi-image"></i></span><h6>Foto Produk</h6>

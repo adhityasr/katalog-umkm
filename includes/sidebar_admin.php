@@ -30,10 +30,10 @@ $user = current_user();
            <i class="bi bi-tags"></i>
            <span>Kelola Kategori</span>
         </a>
-        <a href="<?= BASE_URL ?>/admin/kelola_pesanan.php"
-           class="sidebar-link <?= in_array($current_page, ['kelola_pesanan.php', 'konfirmasi_pesanan.php']) ? 'active' : '' ?>">
-           <i class="bi bi-receipt-cutoff"></i>
-           <span>Kelola Pesanan</span>
+        <a href="<?= BASE_URL ?>/admin/edit_profil.php"
+           class="sidebar-link <?= $current_page === 'edit_profil.php' ? 'active' : '' ?>">
+            <i class="bi bi-person-gear"></i>
+            <span>Edit Profil</span>
         </a>
     </nav>
 

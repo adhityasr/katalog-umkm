@@ -8,14 +8,14 @@ if (is_logged_in()) {
 }
 
 $errors = [];
-$old = ['nama' => '', 'email' => '', 'no_hp' => '', 'alamat' => '', 'role' => 'pembeli'];
+$old = ['nama' => '', 'email' => '', 'no_hp' => '', 'alamat' => '', 'role' => 'pelaku_usaha'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $old['nama'] = trim($_POST['nama'] ?? '');
     $old['email'] = trim($_POST['email'] ?? '');
     $old['no_hp'] = trim($_POST['no_hp'] ?? '');
     $old['alamat'] = trim($_POST['alamat'] ?? '');
-    $old['role'] = in_array($_POST['role'] ?? '', ['pembeli', 'pelaku_usaha']) ? $_POST['role'] : 'pembeli';
+    $old['role'] = 'pelaku_usaha'; // hanya pelaku UMKM, pembeli tidak perlu daftar
     $password = $_POST['password'] ?? '';
     $konfirmasi = $_POST['konfirmasi_password'] ?? '';
 
@@ -35,15 +35,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if (empty($errors)) {
+        if (empty($errors)) {
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare(
             "INSERT INTO users (nama, email, no_hp, alamat, password, role) VALUES (?, ?, ?, ?, ?, ?)"
         );
         $stmt->execute([$old['nama'], $old['email'], $old['no_hp'], $old['alamat'], $hash, $old['role']]);
 
-        $_SESSION['flash'] = ['type' => 'success', 'message' => 'Pendaftaran berhasil. Silakan masuk.'];
-        redirect('/login.php');
+        // Auto-login setelah daftar — langsung ke dashboard sesuai role
+        $user_id = $pdo->lastInsertId();
+        $_SESSION['user_id'] = $user_id;
+        $_SESSION['nama'] = $old['nama'];
+        $_SESSION['role'] = $old['role'];
+        $_SESSION['email'] = $old['email'];
+
+        // Keranjang tamu tidak perlu digabung untuk pelaku (hanya pembeli yang belanja)
+        if (false && $old['role'] === 'pembeli' && !empty($_SESSION['keranjang_guest'])) {
+            foreach ($_SESSION['keranjang_guest'] as $pid => $qty) {
+                $pid = (int) $pid; $qty = max(1, (int) $qty);
+                $stmt = $pdo->prepare("SELECT stok FROM produk WHERE id = ? AND status = 'aktif'");
+                $stmt->execute([$pid]); $p = $stmt->fetch();
+                if (!$p) continue;
+                $qty = min($qty, (int) $p['stok']);
+                $stmt = $pdo->prepare("SELECT id, qty FROM keranjang WHERE user_id = ? AND produk_id = ?");
+                $stmt->execute([$user_id, $pid]); $existing = $stmt->fetch();
+                if ($existing) {
+                    $newQty = min((int) $p['stok'], (int) $existing['qty'] + $qty);
+                    $stmt = $pdo->prepare("UPDATE keranjang SET qty = ? WHERE id = ?");
+                    $stmt->execute([$newQty, $existing['id']]);
+                } else {
+                    $stmt = $pdo->prepare("INSERT INTO keranjang (user_id, produk_id, qty) VALUES (?, ?, ?)");
+                    $stmt->execute([$user_id, $pid, $qty]);
+                }
+            }
+            unset($_SESSION['keranjang_guest']);
+        }
+
+        $_SESSION['flash'] = ['type' => 'success', 'message' => 'Pendaftaran berhasil. Selamat datang, ' . $old['nama'] . '!'];
+        redirect('/pelaku_usaha/produk_saya.php');
     }
 }
 
@@ -107,7 +136,7 @@ $page_title = 'Daftar';
                     <div class="my-auto py-4">
                         <span class="badge mb-3 px-3 py-2 rounded-pill fw-semibold" style="font-size: 0.75rem; letter-spacing: 0.05em; background-color: var(--kaligawe-accent) !important; color: #3d2b00 !important;">PENDAFTARAN</span>
                         <h2 class="display-6 fw-bold mb-3" style="font-family: var(--font-display); line-height: 1.25;">Bergabunglah dengan Ekosistem Kami</h2>
-                        <p class="text-white-50 small" style="font-family: var(--font-body); font-weight: 300;">Daftarkan diri Anda untuk mulai berbelanja produk asli desa, atau kelola toko Anda sendiri sebagai pelaku usaha/petani di platform Pasar Kaligawe.</p>
+                        <p class="text-white-50 small" style="font-family: var(--font-body); font-weight: 300;">Pendaftaran khusus <strong>Pelaku UMKM / Petani</strong> untuk kelola toko di Pasar Kaligawe.</p>
                     </div>
                     
                     <div class="footer-wrapper text-white-50 small mt-auto">
@@ -125,14 +154,15 @@ $page_title = 'Daftar';
                         </a>
                     </div>
                     
-                    <h3 class="fw-bold mb-1" style="font-family: var(--font-display); color: var(--kaligawe-primary);">Buat Akun Baru</h3>
-                    <p class="text-muted mb-4 small">Lengkapi data di bawah ini untuk memulai langkah Anda.</p>
+                    <h3 class="fw-bold mb-1" style="font-family: var(--font-display); color: var(--kaligawe-primary);">Daftar Pelaku Usaha</h3>
 
                     <?php foreach ($errors as $err): ?>
                         <div class="alert alert-danger py-2"><?= sanitize($err) ?></div>
                     <?php endforeach; ?>
 
                     <form method="post" novalidate>
+                        <input type="hidden" name="role" value="pelaku_usaha">
+
                         <div class="mb-3">
                             <label class="form-label">Nama lengkap</label>
                             <input type="text" name="nama" class="form-control" value="<?= sanitize($old['nama']) ?>" required placeholder="Contoh: Budi Santoso">
@@ -157,16 +187,24 @@ $page_title = 'Daftar';
                                 <label class="form-label">Kata sandi</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                    <input type="password" name="password" class="form-control" required placeholder="Min. 6 karakter">
+                                    <input type="password" name="password" id="reg_password" class="form-control" required placeholder="Min. 6 karakter">
+                                    <button type="button" class="btn btn-outline-secondary toggle-password" data-target="reg_password" aria-label="Tampilkan kata sandi"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Konfirmasi kata sandi</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                    <input type="password" name="konfirmasi_password" class="form-control" required placeholder="Ulangi kata sandi">
+                                    <input type="password" name="konfirmasi_password" id="reg_konfirmasi" class="form-control" required placeholder="Ulangi kata sandi">
+                                    <button type="button" class="btn btn-outline-secondary toggle-password" data-target="reg_konfirmasi" aria-label="Tampilkan kata sandi"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" name="setuju" id="setuju" value="1" required>
+                            <label class="form-check-label small" for="setuju">
+                                Saya menyetujui <a href="#" class="text-success fw-semibold" data-bs-toggle="modal" data-bs-target="#syaratModal">Syarat & Ketentuan</a> Pasar Kaligawe
+                            </label>
                         </div>
                         <button type="submit" class="btn btn-success w-100 btn-submit btn-loading-on-submit mt-2" data-loading-text="Mendaftar...">Daftar</button>
                     </form>
@@ -180,6 +218,43 @@ $page_title = 'Daftar';
     </div>
 </div>
 
+<div class="modal fade" id="syaratModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(59,91,62,0.08);">
+                <h5 class="modal-title" style="font-family: var(--font-display); color: var(--kaligawe-primary);"><i class="bi bi-file-text me-2"></i>Syarat & Ketentuan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body small" style="line-height: 1.6; color: #3A4A3B;">
+                <p>Dengan mendaftar sebagai Pelaku UMKM di Pasar Kaligawe, Anda menyetujui:</p>
+                <ul class="mb-3">
+                    <li>Data usaha (nama, WA, alamat) ditampilkan di katalog untuk pembeli.</li>
+                    <li>Produk yang diunggah harus asli, halal, dan sesuai deskripsi.</li>
+                    <li>Admin berhak menonaktifkan produk yang melanggar ketentuan desa.</li>
+                    <li>Menjaga komunikasi via WhatsApp yang tertera agar pembeli mudah hubungi.</li>
+                </ul>
+                <p class="mb-0">Pelanggaran berulang dapat menyebabkan akun dinonaktifkan oleh admin desa.</p>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid rgba(59,91,62,0.08);">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Mengerti</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('.toggle-password').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            var input = document.getElementById(btn.dataset.target);
+            if(!input) return;
+            var isPass = input.type === 'password';
+            input.type = isPass ? 'text' : 'password';
+            btn.innerHTML = isPass ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+        });
+    });
+});
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/app.js"></script>
 </body>

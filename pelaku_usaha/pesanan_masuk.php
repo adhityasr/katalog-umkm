@@ -57,7 +57,7 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
                 <div class="table-responsive mt-2">
                     <table class="table table-sm mb-0">
-                        <thead><tr><th>Produk</th><th>Qty</th><th>Subtotal</th></tr></thead>
+                        <thead><tr><th>Produk</th><th>Jumlah</th><th>Total Harga</th></tr></thead>
                         <tbody>
                         <?php foreach ($g['items'] as $it): ?>
                             <tr>

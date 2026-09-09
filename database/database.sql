@@ -141,25 +141,23 @@ INSERT INTO users (nama, email, no_hp, alamat, password, role) VALUES
 INSERT INTO kategori (nama_kategori, jenis) VALUES
 ('Makanan Olahan', 'umkm'),
 ('Kerajinan Tangan', 'umkm'),
-('Padi & Beras', 'pertanian'),
-('Palawija', 'pertanian'),
+('Padi & Palawija', 'pertanian'),
 ('Peternakan', 'pertanian'),
-('Peternakan Kambing', 'pertanian'),
 ('Buah-buahan', 'pertanian');
 
 INSERT INTO produk (user_id, kategori_id, sumber_usaha, nama_produk, deskripsi, harga, satuan, stok, foto) VALUES
-(2, 1, 'perorangan', 'Lumpia Kaligawe', 'Lumpia rebung khas Desa Kaligawe, isi rebung dan ayam, renyah di luar lembut di dalam.', 2000, 'pcs', 100, NULL),
-(2, 1, 'perorangan', 'Rengginang', 'Rengginang beras ketan gurih, kemasan 250 gram, cocok untuk oleh-oleh.', 15000, 'bungkus', 50, NULL),
-(2, 1, 'perorangan', 'Kacang Sangrai', 'Kacang tanah sangrai asin, kemasan 250 gram, camilan sehat keluarga.', 18000, 'bungkus', 40, NULL),
-(3, 3, 'kelompok_usaha', 'Beras Kaligawe', 'Beras hasil panen sawah Desa Kaligawe, kualitas premium, pulen dan wangi.', 13000, 'kg', 500, NULL),
-(3, 4, 'kelompok_usaha', 'Jagung Pipil', 'Jagung pipil kering siap olah, cocok untuk pakan ternak atau bahan pangan.', 6000, 'kg', 300, NULL),
-(3, 4, 'kelompok_usaha', 'Jagung Manis', 'Jagung manis segar hasil panen petani Kaligawe.', 8000, 'kg', 150, NULL),
-(3, 7, 'kelompok_usaha', 'Semangka', 'Semangka merah manis, dibudidayakan sebagai komoditas sampingan petani jagung.', 10000, 'kg', 80, NULL),
-(5, 5, 'kelompok_usaha', 'Daging Kambing', 'Daging kambing segar dari peternakan kelompok Dusun 3, dipotong sesuai pesanan.', 120000, 'kg', 40, NULL),
-(5, 5, 'kelompok_usaha', 'Susu Kambing Etawa', 'Susu kambing etawa segar, dikemas botol 1 liter, kaya manfaat.', 25000, 'liter', 60, NULL),
-(6, 2, 'kelompok_usaha', 'Tas Anyaman Bambu', 'Tas anyaman bambu buatan tangan warga Dusun 2, kuat dan estetik.', 45000, 'pcs', 25, NULL),
-(6, 2, 'kelompok_usaha', 'Tikar Pandan', 'Tikar anyaman daun pandan, ukuran 180x200 cm.', 35000, 'pcs', 30, NULL),
-(6, 2, 'bumdes', 'Keranjang Rotan BUMDes', 'Keranjang rotan produksi BUMDes Desa Kaligawe, berbagai ukuran.', 55000, 'pcs', 20, NULL);
+(2, 1, 'perorangan', 'Lumpia Kaligawe', 'Lumpia rebung khas Desa Kaligawe, isi rebung dan ayam, renyah di luar lembut di dalam.', 2000, 'pcs', 100, 'produk_1.jpg'),
+(2, 1, 'perorangan', 'Rengginang', 'Rengginang beras ketan gurih, kemasan 250 gram, cocok untuk oleh-oleh.', 15000, 'bungkus', 50, 'produk_2.jpg'),
+(2, 1, 'perorangan', 'Kacang Sangrai', 'Kacang tanah sangrai asin, kemasan 250 gram, camilan sehat keluarga.', 18000, 'bungkus', 40, 'produk_3.jpg'),
+(3, 3, 'kelompok_usaha', 'Beras Kaligawe', 'Beras hasil panen sawah Desa Kaligawe, kualitas premium, pulen dan wangi.', 13000, 'kg', 500, 'produk_4.jpg'),
+(3, 3, 'kelompok_usaha', 'Jagung Pipil', 'Jagung pipil kering siap olah, cocok untuk pakan ternak atau bahan pangan.', 6000, 'kg', 300, 'produk_5.jpg'),
+(3, 3, 'kelompok_usaha', 'Jagung Manis', 'Jagung manis segar hasil panen petani Kaligawe.', 8000, 'kg', 150, 'produk_6.jpg'),
+(3, 5, 'kelompok_usaha', 'Semangka', 'Semangka merah manis, dibudidayakan sebagai komoditas sampingan petani jagung.', 10000, 'kg', 80, 'produk_7.jpg'),
+(5, 4, 'kelompok_usaha', 'Daging Kambing', 'Daging kambing segar dari peternakan kelompok Dusun 3, dipotong sesuai pesanan.', 120000, 'kg', 40, 'produk_8.jpg'),
+(5, 4, 'kelompok_usaha', 'Susu Kambing Etawa', 'Susu kambing etawa segar, dikemas botol 1 liter, kaya manfaat.', 25000, 'liter', 60, 'produk_9.jpg'),
+(6, 2, 'kelompok_usaha', 'Tas Anyaman Bambu', 'Tas anyaman bambu buatan tangan warga Dusun 2, kuat dan estetik.', 45000, 'pcs', 25, 'produk_10.jpg'),
+(6, 2, 'kelompok_usaha', 'Tikar Pandan', 'Tikar anyaman daun pandan, ukuran 180x200 cm.', 35000, 'pcs', 30, 'produk_11.jpg'),
+(6, 2, 'bumdes', 'Keranjang Rotan BUMDes', 'Keranjang rotan produksi BUMDes Desa Kaligawe, berbagai ukuran.', 55000, 'pcs', 20, 'produk_12.jpg');
 
 INSERT INTO pesanan (id, user_id, tanggal, total, nama_penerima, alamat_pengiriman, no_hp_penerima, status) VALUES
 (1, 4, '2026-08-05 09:12:00', 85000, 'Sari', 'Jl. Pekiringan No. 12, Cirebon Kota', '081234500004', 'selesai'),

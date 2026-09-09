@@ -8,17 +8,7 @@ $role_label = [
     'pembeli' => 'Pembeli',
 ][$user['role'] ?? ''] ?? '';
 
-// Hitung jumlah item keranjang untuk badge navbar (mendukung tamu tanpa login)
-$jumlah_keranjang = 0;
-if (isset($pdo) && function_exists('cart_count_for_header')) {
-    $jumlah_keranjang = cart_count_for_header($pdo);
-} elseif ($user && $user['role'] === 'pembeli' && isset($pdo)) {
-    $stmt = $pdo->prepare("SELECT COALESCE(SUM(qty),0) AS total FROM keranjang WHERE user_id = ?");
-    $stmt->execute([$user['id']]);
-    $jumlah_keranjang = (int) $stmt->fetch()['total'];
-} elseif (!$user) {
-    $jumlah_keranjang = array_sum($_SESSION['keranjang_guest'] ?? []);
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -44,6 +34,9 @@ if (isset($pdo) && function_exists('cart_count_for_header')) {
                 <span class="navbar-brand-name">Pasar Kaligawe</span>
                 <span class="navbar-brand-tag">UMKM &amp; Pertanian Desa</span>
             </span>
+            <?php if (!str_contains($_SERVER['HTTP_HOST'] ?? '', 'localhost') && !str_contains($_SERVER['HTTP_HOST'] ?? '', '127.0.0.1')): ?>
+                <span class="badge bg-success ms-2 d-none d-md-inline-flex align-items-center gap-1" style="font-size:0.68rem; padding:0.3em 0.6em; border:1px solid rgba(255,255,255,0.2)"><span style="width:6px;height:6px;background:#22C55E;border-radius:50%;display:inline-block;box-shadow:0 0 6px #22C55E"></span> LIVE</span>
+            <?php endif; ?>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Buka menu navigasi">
             <span class="navbar-toggler-icon"></span>
@@ -58,19 +51,6 @@ if (isset($pdo) && function_exists('cart_count_for_header')) {
                 <?php endif; ?>
             </ul>
             <ul class="navbar-nav align-items-lg-center">
-                <?php if (!$user || ($user && $user['role'] === 'pembeli')): ?>
-                    <li class="nav-item me-lg-2">
-                        <a class="nav-link nav-link-pill position-relative" href="<?= BASE_URL ?>/keranjang.php">
-                            <i class="bi bi-cart3 me-1"></i>Keranjang
-                            <?php if ($jumlah_keranjang > 0): ?>
-                                <span class="badge rounded-pill bg-warning text-dark cart-badge" id="cart-badge"><?= $jumlah_keranjang ?></span>
-                            <?php else: ?>
-                                <span class="badge rounded-pill bg-warning text-dark cart-badge d-none" id="cart-badge">0</span>
-                            <?php endif; ?>
-                        </a>
-                    </li>
-                    <li class="nav-item me-lg-2"><a class="nav-link nav-link-pill" href="<?= BASE_URL ?>/pesanan_saya.php"><i class="bi bi-bag-check me-1"></i>Pesanan Saya</a></li>
-                <?php endif; ?>
                 <?php if ($user): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link user-chip dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -84,10 +64,10 @@ if (isset($pdo) && function_exists('cart_count_for_header')) {
                             <li><h6 class="dropdown-header"><?= sanitize($user['nama']) ?></h6></li>
                             <?php if ($user['role'] === 'admin'): ?>
                                 <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/index.php"><i class="bi bi-speedometer2 me-2"></i>Dashboard Admin</a></li>
+                                <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/edit_profil.php"><i class="bi bi-person-gear me-2"></i>Edit Profil</a></li>
                             <?php elseif ($user['role'] === 'pelaku_usaha'): ?>
                                 <li><a class="dropdown-item" href="<?= BASE_URL ?>/pelaku_usaha/produk_saya.php"><i class="bi bi-basket me-2"></i>Produk Saya</a></li>
-                            <?php else: ?>
-                                <li><a class="dropdown-item" href="<?= BASE_URL ?>/pesanan_saya.php"><i class="bi bi-bag-check me-2"></i>Pesanan Saya</a></li>
+                                <li><a class="dropdown-item" href="<?= BASE_URL ?>/pelaku_usaha/edit_profil.php"><i class="bi bi-person-gear me-2"></i>Edit Profil</a></li>
                             <?php endif; ?>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item text-danger" href="<?= BASE_URL ?>/logout.php"><i class="bi bi-box-arrow-right me-2"></i>Keluar</a></li>
@@ -107,15 +87,6 @@ $is_dashboard = in_array($current_dir, ['admin', 'pelaku_usaha']);
 $main_class = $is_dashboard ? "dashboard-main" : "container py-4";
 ?>
 <main class="<?= $main_class ?>">
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
-    <?php if ($flash = $_SESSION['flash'] ?? null): unset($_SESSION['flash']); ?>
-        <div class="toast align-items-center border-0 text-bg-<?= sanitize($flash['type']) ?>"
-             role="alert" data-bs-delay="5000" id="flashToast">
-            <div class="d-flex">
-                <div class="toast-body"><?= sanitize($flash['message']) ?></div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                        data-bs-dismiss="toast"></button>
-            </div>
-        </div>
-    <?php endif; ?>
+    <div class="message-box-toast" id="flashToastContainer">
+        <?= flash_message_box() ?>
     </div>

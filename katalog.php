@@ -46,7 +46,6 @@ require_once __DIR__ . '/includes/header.php';
 <section class="hero-landing" id="beranda">
     <div class="row align-items-center g-4 g-lg-5">
         <div class="col-lg-6">
-            <span class="hero-eyebrow">UMKM &amp; Hasil Pertanian Desa Kaligawe</span>
             <h1 class="hero-title">Hasil Bumi &amp; Karya Warga, Langsung dari Desa</h1>
             <p class="hero-subtitle">
                 Jelajahi produk olahan dan panen segar yang dibudidayakan sepenuh hati
@@ -76,17 +75,18 @@ require_once __DIR__ . '/includes/header.php';
             <div class="hero-visual" aria-hidden="true">
                 <div class="hero-visual-halo"></div>
                 <div class="hero-card fc-1">
-                    <i class="bi bi-basket-fill hero-card-icon" aria-hidden="true"></i>
+                    <img src="<?= BASE_URL ?>/assets/uploads/produk_4.jpg" alt="" class="hero-card-thumb" onerror="this.style.display='none'">
                     <div>
                         <div class="hero-card-title">Beras Kaligawe</div>
                         <div class="hero-card-price">Rp 13.000 / kg</div>
                     </div>
                 </div>
                 <div class="hero-card fc-2">
-                    <i class="bi bi-sprout hero-card-icon" aria-hidden="true"></i>
+                    <img src="<?= BASE_URL ?>/assets/uploads/produk_2.jpg" alt="" class="hero-card-thumb hero-card-thumb--rengginang" onerror="this.nextElementSibling.style.display='block';this.style.display='none'">
+                    <i class="bi bi-cookie hero-card-icon" aria-hidden="true" style="display:none"></i>
                     <div>
-                        <div class="hero-card-title">Jagung Pipil</div>
-                        <div class="hero-card-price">Rp 6.000 / kg</div>
+                        <div class="hero-card-title">Rengginang</div>
+                        <div class="hero-card-price">Rp 15.000 / bungkus</div>
                     </div>
                 </div>
                 <div class="hero-card fc-3">
@@ -106,13 +106,15 @@ require_once __DIR__ . '/includes/header.php';
     <div class="row align-items-center g-5">
         <div class="col-lg-6">
             <div class="about-visual" aria-hidden="true">
-                <div class="about-visual-panel">
+                <div class="about-visual-panel about-visual-panel--rengginang">
+                    <img src="<?= BASE_URL ?>/assets/uploads/produk_2.jpg" alt="Rengginang" class="about-visual-photo" onerror="this.style.display='none'">
+                    <div class="about-visual-overlay"></div>
                     <div class="about-illustration">
                         <div class="ill-ring ill-ring-1"></div>
                         <div class="ill-ring ill-ring-2"></div>
                         <div class="ill-circle ill-circle-1"><i class="bi bi-basket-fill"></i></div>
-                        <div class="ill-circle ill-circle-2"><i class="bi bi-sprout"></i></div>
-                        <div class="ill-circle ill-circle-3"><i class="bi bi-hand-thumbs-up-fill"></i></div>
+                        <div class="ill-circle ill-circle-2"><i class="bi bi-tree-fill"></i></div>
+                        <div class="ill-circle ill-circle-3"><i class="bi bi-cookie"></i></div>
                     </div>
                 </div>
                 <div class="about-float-card">
@@ -168,7 +170,7 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="how-card-icon"><i class="bi bi-bag-check"></i></div>
                 <div class="how-card-step">Langkah 2</div>
                 <h5 class="how-card-title">Pesan &amp; Unggah Bukti</h5>
-                <p class="how-card-text">Isi data penerima, checkout, lalu unggah bukti transfer. Admin desa memverifikasi pembayaran Anda.</p>
+                <p class="how-card-text">Chat penjual via WhatsApp sesuai isi keranjang, lalu unggah bukti transfer. Admin desa memverifikasi pembayaran Anda.</p>
             </div>
         </div>
         <div class="col-md-4">
@@ -243,10 +245,7 @@ require_once __DIR__ . '/includes/header.php';
                         <?php if ($isLow): ?><span class="badge bg-warning text-dark" style="font-size:0.65rem">Stok menipis</span><?php endif; ?>
                     </div>
                     <div class="stock-bar mb-3"><div class="stock-bar-fill <?= $isLow ? 'low' : '' ?>" style="width: <?= $stockPct ?>%"></div></div>
-                    <?php
-                    $wa_text_k = 'Halo Kak ' . $p['nama_penjual'] . ', saya tertarik dengan *' . $p['nama_produk'] . '* (' . rupiah($p['harga']) . '/' . $p['satuan'] . ') di Pasar Kaligawe. Apakah masih tersedia? ' . BASE_URL . '/produk_detail.php?id=' . $p['id'];
-                    $wa_url_k = wa_link($p['hp_penjual'] ?? '', $wa_text_k);
-                    ?>
+                    <?php $wa_url_k = wa_link($p['hp_penjual'] ?? '', wa_text_product($p['nama_penjual'], $p['nama_produk'], $p['harga'], $p['satuan'], BASE_URL . '/produk_detail.php?id=' . $p['id'])); ?>
                     <div class="d-flex gap-2 mt-auto">
                         <a href="<?= BASE_URL ?>/produk_detail.php?id=<?= $p['id'] ?>" class="btn btn-outline-success btn-sm flex-grow-1">Lihat detail</a>
                         <?php if ($wa_url_k): ?>

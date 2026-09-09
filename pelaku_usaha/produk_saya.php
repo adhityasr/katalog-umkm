@@ -95,9 +95,12 @@ require_once __DIR__ . '/../includes/header.php';
                     Selamat berjualan di Pasar Kaligawe. Kelola produk, pantau pesanan masuk, dan catat penjualan manual Anda dari satu panel ini.
                 </p>
             </div>
-            <a href="<?= BASE_URL ?>/pelaku_usaha/tambah_produk.php" class="btn position-relative" style="z-index: 2; background: linear-gradient(135deg, var(--kaligawe-accent) 0%, #C9873A 100%); border: none; color: #3d2b00; font-weight: 600; border-radius: 10px; padding: 0.6rem 1.2rem; font-size: 0.92rem; box-shadow: 0 4px 12px rgba(221, 161, 94, 0.35);">
-                <i class="bi bi-plus-lg me-1"></i> Tambah Produk
-            </a>
+            <div class="d-flex gap-2 position-relative" style="z-index:2">
+                <a href="<?= BASE_URL ?>/pelaku_usaha/edit_profil.php" class="btn btn-outline-light" style="border-radius:10px; padding:0.6rem 1.1rem; font-size:0.88rem; border-color: rgba(255,255,255,0.4); color:#fff;"><i class="bi bi-person-gear me-1"></i> Edit Profil</a>
+                <a href="<?= BASE_URL ?>/pelaku_usaha/tambah_produk.php" class="btn" style="background: linear-gradient(135deg, var(--kaligawe-accent) 0%, #C9873A 100%); border: none; color: #3d2b00; font-weight: 600; border-radius: 10px; padding: 0.6rem 1.2rem; font-size: 0.92rem; box-shadow: 0 4px 12px rgba(221, 161, 94, 0.35);">
+                    <i class="bi bi-plus-lg me-1"></i> Tambah Produk
+                </a>
+            </div>
             <div class="d-none d-md-block opacity-25 position-absolute end-0" style="transform: rotate(12deg); margin-right: 24px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" fill="currentColor" class="bi bi-basket2" viewBox="0 0 16 16">
                     <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 6h1.717L5.07 1.243a.5.5 0 0 1 .686-.172zM3.394 15l-1.48-6h-.97l1.525 6.426a.75.75 0 0 0 .73.574h9.601a.75.75 0 0 0 .73-.574L15.056 9h-.972l-1.479 6h-9.21z"/>
@@ -276,25 +279,6 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
             </div>
 
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-4">
-                    <h6 class="mb-3 fw-semibold" style="color: var(--kaligawe-primary);"><i class="bi bi-lightning-charge me-2"></i>Aksi Cepat</h6>
-                    <div class="d-grid gap-2">
-                        <a href="<?= BASE_URL ?>/pelaku_usaha/tambah_produk.php" class="quick-action-item text-decoration-none">
-                            <span class="qa-icon text-success"><i class="bi bi-box-seam"></i></span> Tambah Produk Baru
-                        </a>
-                        <a href="<?= BASE_URL ?>/katalog.php" class="quick-action-item text-decoration-none">
-                            <span class="qa-icon text-primary"><i class="bi bi-shop-window"></i></span> Lihat Katalog Toko
-                        </a>
-                        <a href="<?= BASE_URL ?>/pelaku_usaha/pesanan_masuk.php" class="quick-action-item text-decoration-none">
-                            <span class="qa-icon text-danger"><i class="bi bi-receipt"></i></span> Lihat Pesanan Masuk
-                        </a>
-                        <a href="<?= BASE_URL ?>/pelaku_usaha/catat_penjualan.php" class="quick-action-item text-decoration-none">
-                            <span class="qa-icon text-warning"><i class="bi bi-shop"></i></span> Catat Penjualan Offline
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
