@@ -8,7 +8,6 @@ define('DB_NAME', 'kaligawe');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
-// Auto-detect BASE_URL — support localhost & hosting live https://pasar-kaligawe.desa.id
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 // Jika sudah di-hosting (bukan localhost), BASE_URL = '' (di root domain)
 if (!str_contains($host, 'localhost') && !str_contains($host, '127.0.0.1')) {
